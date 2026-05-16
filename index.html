@@ -62,12 +62,88 @@
             opacity: 1;
             transform: translateY(0);
         }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
 
         /* Hero Pattern */
         .bg-pattern {
             background-color: #ffffff;
             background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
             background-size: 20px 20px;
+        }
+
+        /* SHARPER IMAGES — force browser to render images crisply */
+        img {
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+        }
+
+        /* High-quality rendering for portrait/cert images */
+        .img-sharp {
+            image-rendering: auto;
+            filter: contrast(1.03) saturate(1.05);
+            -webkit-filter: contrast(1.03) saturate(1.05);
+        }
+
+        /* Gradient overlay for project cards */
+        .img-overlay::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.35));
+            pointer-events: none;
+        }
+
+        /* Floating animation for hero badge */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+
+        /* Gradient text accent */
+        .text-gradient {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Placeholder for missing images — visible guide */
+        .img-placeholder {
+            background: repeating-linear-gradient(
+                45deg,
+                #f3f4f6,
+                #f3f4f6 10px,
+                #e5e7eb 10px,
+                #e5e7eb 20px
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-align: center;
+            padding: 1rem;
+            border: 2px dashed #cbd5e1;
+        }
+
+        /* Lightbox-ready cursor */
+        .zoomable { cursor: zoom-in; }
+
+        /* Smooth hover lift */
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.15);
         }
     </style>
 </head>
@@ -127,10 +203,17 @@
                 </div>
                 <div class="w-full md:w-2/5 fade-in delay-100">
                     <div class="relative w-64 h-64 md:w-80 md:h-80 mx-auto">
-                        <div class="absolute inset-0 bg-accent rounded-full opacity-10 animate-pulse"></div>
-                        <img src="https://i.postimg.cc/W1QJTCtr/Anh-nhan-giai-KQM.png" alt="Louis Nguyen receiving award" class="rounded-full w-full h-full object-cover border-4 border-white shadow-2xl relative z-10" style="object-position: top;">
+                        <div class="absolute -inset-4 bg-gradient-to-tr from-accent/30 via-purple-400/20 to-pink-400/20 rounded-full blur-2xl animate-pulse"></div>
+                        <div class="absolute inset-0 bg-accent rounded-full opacity-10"></div>
+                        <!-- 📸 IMAGE 1 — HERO PORTRAIT: thay link bên dưới bằng ảnh chân dung/ảnh nhận giải của bạn -->
+                        <img src="https://i.postimg.cc/W1QJTCtr/Anh-nhan-giai-KQM.png"
+                             alt="Louis Nguyen receiving award"
+                             loading="eager"
+                             decoding="async"
+                             class="img-sharp rounded-full w-full h-full object-cover border-4 border-white shadow-2xl relative z-10"
+                             style="object-position: top;">
                         <!-- Floating Badge -->
-                        <div class="absolute -bottom-4 -right-4 bg-white p-4 rounded-xl shadow-xl z-20 hidden md:block">
+                        <div class="absolute -bottom-4 -right-4 bg-white p-4 rounded-xl shadow-xl z-20 hidden md:block animate-float">
                             <div class="flex items-center gap-3">
                                 <div class="bg-blue-100 p-2 rounded-lg text-accent">
                                     <i class="fas fa-chart-line text-xl"></i>
@@ -141,6 +224,8 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Decorative ring -->
+                        <div class="absolute -top-2 -left-2 w-16 h-16 border-4 border-accent/30 rounded-full z-0"></div>
                     </div>
                 </div>
             </div>
@@ -179,13 +264,29 @@
                     </ul>
                 </div>
                 <div class="w-full md:w-2/3">
-                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover-lift">
                         <p class="text-lg leading-relaxed text-gray-600 mb-6">
                             As an ENTJ-type strategist, I am deeply passionate about dissecting market trends and consumer mindsets. I am currently specializing in International Business at the University of Economics Ho Chi Minh City (UEH).
                         </p>
-                        <p class="text-lg leading-relaxed text-gray-600">
+                        <p class="text-lg leading-relaxed text-gray-600 mb-6">
                             My ultimate goal is to become a top-tier Market Research Analyst. I believe in the power of data-driven insights combined with behavioral economics. My current focus lies in bridging the gap between rigorous academic research—specifically leveraging <strong>Nudge theory</strong>—and developing practical, sustainable business solutions for the modern retail landscape.
                         </p>
+
+                        <!-- 📸 IMAGE 2 + 3 — ABOUT GALLERY: 2 ảnh nhỏ (ví dụ: ảnh học tập, ảnh thuyết trình, ảnh team) -->
+                        <div class="grid grid-cols-2 gap-3 mt-6">
+                            <div class="aspect-[4/3] rounded-xl overflow-hidden img-placeholder">
+                                <span>📸 ADD IMAGE HERE<br>(VD: Ảnh thuyết trình)</span>
+                                <!-- Thay placeholder bằng:
+                                <img src="LINK_ẢNH_2" alt="Louis presenting" loading="lazy" decoding="async" class="img-sharp w-full h-full object-cover">
+                                -->
+                            </div>
+                            <div class="aspect-[4/3] rounded-xl overflow-hidden img-placeholder">
+                                <span>📸 ADD IMAGE HERE<br>(VD: Ảnh team / lớp học)</span>
+                                <!-- Thay placeholder bằng:
+                                <img src="LINK_ẢNH_3" alt="Louis with team" loading="lazy" decoding="async" class="img-sharp w-full h-full object-cover">
+                                -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -205,9 +306,14 @@
                 
                 <!-- Project A -->
                 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-xl transition-shadow duration-300 group fade-in flex flex-col">
-                    <div class="h-48 overflow-hidden relative border-b border-gray-100">
-                        <img src="https://i.postimg.cc/j5TwJfzM/Giai-A-KQM-Minimalism-1.png" alt="Project A Certificate" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500">
-                        <div class="absolute top-4 right-4 bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 rounded-full shadow-sm flex items-center gap-1">
+                    <div class="h-56 overflow-hidden relative border-b border-gray-100 bg-gradient-to-br from-yellow-50 to-amber-50">
+                        <!-- 📸 IMAGE 4 — PROJECT A CERTIFICATE: ảnh giải Minimalism -->
+                        <img src="https://i.postimg.cc/j5TwJfzM/Giai-A-KQM-Minimalism-1.png"
+                             alt="Project A Certificate - Sustainable Fashion & Minimalism"
+                             loading="lazy"
+                             decoding="async"
+                             class="img-sharp w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-4 right-4 bg-gradient-to-r from-yellow-400 to-amber-400 text-yellow-900 text-xs font-bold px-3 py-1.5 rounded-full shadow-md flex items-center gap-1.5">
                             <i class="fas fa-trophy"></i> First Prize
                         </div>
                     </div>
@@ -226,9 +332,14 @@
 
                 <!-- Project B -->
                 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-xl transition-shadow duration-300 group fade-in flex flex-col">
-                    <div class="h-48 overflow-hidden relative border-b border-gray-100">
-                        <img src="https://i.postimg.cc/RFm6ntcR/Giai-A-NNCT-1.png" alt="Project B Certificate" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500">
-                        <div class="absolute top-4 right-4 bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 rounded-full shadow-sm flex items-center gap-1">
+                    <div class="h-56 overflow-hidden relative border-b border-gray-100 bg-gradient-to-br from-yellow-50 to-amber-50">
+                        <!-- 📸 IMAGE 5 — PROJECT B CERTIFICATE: ảnh giải Hyper-personalization -->
+                        <img src="https://i.postimg.cc/RFm6ntcR/Giai-A-NNCT-1.png"
+                             alt="Project B Certificate - Hyper-personalization & Sustainability"
+                             loading="lazy"
+                             decoding="async"
+                             class="img-sharp w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-4 right-4 bg-gradient-to-r from-yellow-400 to-amber-400 text-yellow-900 text-xs font-bold px-3 py-1.5 rounded-full shadow-md flex items-center gap-1.5">
                             <i class="fas fa-trophy"></i> First Prize
                         </div>
                     </div>
@@ -247,9 +358,14 @@
 
                 <!-- Project C -->
                 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-xl transition-shadow duration-300 group fade-in flex flex-col">
-                    <div class="h-48 bg-gray-100 overflow-hidden relative border-b border-gray-100">
-                         <img src="https://i.postimg.cc/HxtJ0Lzs/Giai-nhi-COB-NOSTALGIA-1.png" alt="Project C Certificate" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500">
-                        <div class="absolute top-4 right-4 bg-gray-200 text-gray-800 text-xs font-bold px-3 py-1 rounded-full shadow-sm flex items-center gap-1">
+                    <div class="h-56 bg-gradient-to-br from-gray-50 to-slate-100 overflow-hidden relative border-b border-gray-100">
+                        <!-- 📸 IMAGE 6 — PROJECT C CERTIFICATE: ảnh giải Nostalgia -->
+                        <img src="https://i.postimg.cc/HxtJ0Lzs/Giai-nhi-COB-NOSTALGIA-1.png"
+                             alt="Project C Certificate - Nostalgia Marketing"
+                             loading="lazy"
+                             decoding="async"
+                             class="img-sharp w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-4 right-4 bg-gradient-to-r from-slate-200 to-gray-300 text-gray-800 text-xs font-bold px-3 py-1.5 rounded-full shadow-md flex items-center gap-1.5">
                             <i class="fas fa-medal"></i> Second Prize
                         </div>
                     </div>
@@ -266,9 +382,23 @@
                     </div>
                 </div>
 
-                <!-- Project D -->
-                <div class="bg-primary rounded-2xl shadow-sm overflow-hidden hover:shadow-xl transition-shadow duration-300 group fade-in flex flex-col relative text-white">
+                <!-- Project D - StreetLISH -->
+                <div class="bg-gradient-to-br from-primary via-gray-900 to-slate-900 rounded-2xl shadow-sm overflow-hidden hover:shadow-2xl transition-all duration-300 group fade-in flex flex-col relative text-white">
                     <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==')]"></div>
+
+                    <!-- 📸 IMAGE 7 — STREETLISH PROJECT: ảnh sách dịch / ảnh hoạt động cộng đồng -->
+                    <div class="h-56 overflow-hidden relative border-b border-white/10">
+                        <div class="img-placeholder h-full w-full text-gray-300" style="background: repeating-linear-gradient(45deg, rgba(255,255,255,0.05), rgba(255,255,255,0.05) 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px); border-color: rgba(255,255,255,0.2);">
+                            <span class="text-gray-200">📸 ADD IMAGE HERE<br>(VD: Ảnh dự án StreetLISH)</span>
+                        </div>
+                        <!-- Thay placeholder bằng:
+                        <img src="LINK_ẢNH_7" alt="StreetLISH project" loading="lazy" decoding="async" class="img-sharp w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        -->
+                        <div class="absolute top-4 right-4 bg-blue-500/90 backdrop-blur text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md flex items-center gap-1.5">
+                            <i class="fas fa-heart"></i> Social Impact
+                        </div>
+                    </div>
+
                     <div class="p-8 flex-grow flex flex-col relative z-10">
                         <div class="text-sm text-blue-300 font-semibold mb-2">Social Impact Initiative</div>
                         <h3 class="font-serif text-2xl font-bold mb-3 leading-snug">StreetLISH</h3>
@@ -299,12 +429,12 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 
                 <!-- Category 1 -->
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:-translate-y-1 transition-transform duration-300 fade-in">
-                    <div class="w-14 h-14 bg-blue-50 text-accent rounded-xl flex items-center justify-center text-2xl mb-6">
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 fade-in">
+                    <div class="w-14 h-14 bg-gradient-to-br from-blue-50 to-blue-100 text-accent rounded-xl flex items-center justify-center text-2xl mb-6 shadow-sm">
                         <i class="fas fa-chart-pie"></i>
                     </div>
                     <h3 class="font-serif text-xl font-bold text-primary mb-4">Data & Productivity</h3>
-                    <ul class="space-y-3">
+                    <ul class="space-y-3 mb-6">
                         <li class="flex items-start gap-2">
                             <i class="fas fa-check-circle text-accent mt-1 text-sm"></i>
                             <span class="text-sm text-gray-700"><strong>Google Data Analytics</strong><br>Professional Certificate (Coursera)</span>
@@ -314,15 +444,24 @@
                             <span class="text-sm text-gray-700"><strong>MOS Associate</strong><br>Excel, PowerPoint, Word 2019</span>
                         </li>
                     </ul>
+                    <!-- 📸 IMAGE 8 — LOGO CHỨNG CHỈ: ảnh logo Google / Microsoft / Coursera -->
+                    <div class="flex gap-2 pt-4 border-t border-gray-100">
+                        <div class="w-12 h-12 rounded-lg img-placeholder text-[10px]">📸<br>Logo</div>
+                        <div class="w-12 h-12 rounded-lg img-placeholder text-[10px]">📸<br>Logo</div>
+                        <!-- Thay placeholder bằng:
+                        <img src="LINK_LOGO_GOOGLE" alt="Google Analytics" class="w-12 h-12 rounded-lg object-contain bg-gray-50 p-1">
+                        <img src="LINK_LOGO_MOS" alt="MOS" class="w-12 h-12 rounded-lg object-contain bg-gray-50 p-1">
+                        -->
+                    </div>
                 </div>
 
                 <!-- Category 2 -->
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:-translate-y-1 transition-transform duration-300 fade-in delay-100">
-                    <div class="w-14 h-14 bg-blue-50 text-accent rounded-xl flex items-center justify-center text-2xl mb-6">
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 fade-in delay-100">
+                    <div class="w-14 h-14 bg-gradient-to-br from-purple-50 to-purple-100 text-purple-600 rounded-xl flex items-center justify-center text-2xl mb-6 shadow-sm">
                         <i class="fas fa-chess-knight"></i>
                     </div>
                     <h3 class="font-serif text-xl font-bold text-primary mb-4">Business & Strategy</h3>
-                    <ul class="space-y-3">
+                    <ul class="space-y-3 mb-6">
                         <li class="flex items-start gap-2">
                             <i class="fas fa-check-circle text-accent mt-1 text-sm"></i>
                             <span class="text-sm text-gray-700"><strong>GLO-BUS Simulation</strong><br>UAV Drone pricing & compensation cost optimization</span>
@@ -332,21 +471,35 @@
                             <span class="text-sm text-gray-700"><strong>Market Research</strong><br>Applying Nudge theory to consumer behavior & sustainable retail</span>
                         </li>
                     </ul>
+                    <!-- 📸 IMAGE 9 — ẢNH MINH HỌA SIMULATION: screenshot GLO-BUS hoặc biểu đồ phân tích -->
+                    <div class="pt-4 border-t border-gray-100">
+                        <div class="aspect-video rounded-lg img-placeholder text-xs">📸 ADD IMAGE HERE<br>(VD: Screenshot GLO-BUS)</div>
+                        <!-- Thay placeholder bằng:
+                        <img src="LINK_ẢNH_9" alt="GLO-BUS Simulation" loading="lazy" decoding="async" class="img-sharp w-full aspect-video object-cover rounded-lg">
+                        -->
+                    </div>
                 </div>
 
                 <!-- Category 3 -->
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:-translate-y-1 transition-transform duration-300 fade-in delay-200">
-                    <div class="w-14 h-14 bg-blue-50 text-accent rounded-xl flex items-center justify-center text-2xl mb-6">
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 fade-in delay-200">
+                    <div class="w-14 h-14 bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center text-2xl mb-6 shadow-sm">
                         <i class="fas fa-microscope"></i>
                     </div>
                     <h3 class="font-serif text-xl font-bold text-primary mb-4">Research Methodology</h3>
-                    <p class="text-sm text-gray-700 leading-relaxed">
+                    <p class="text-sm text-gray-700 leading-relaxed mb-6">
                         Advanced application of mixed-methods research, effectively combining simultaneous qualitative and quantitative approaches.
                     </p>
-                    <div class="mt-4 flex flex-wrap gap-2">
-                        <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">Online Experiments</span>
-                        <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">Focus Groups</span>
-                        <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">In-depth Interviews</span>
+                    <div class="mb-6 flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-medium">Online Experiments</span>
+                        <span class="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-medium">Focus Groups</span>
+                        <span class="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-medium">In-depth Interviews</span>
+                    </div>
+                    <!-- 📸 IMAGE 10 — ẢNH NGHIÊN CỨU: ảnh đang phỏng vấn / focus group / data charts -->
+                    <div class="pt-4 border-t border-gray-100">
+                        <div class="aspect-video rounded-lg img-placeholder text-xs">📸 ADD IMAGE HERE<br>(VD: Ảnh focus group / phân tích dữ liệu)</div>
+                        <!-- Thay placeholder bằng:
+                        <img src="LINK_ẢNH_10" alt="Research methodology" loading="lazy" decoding="async" class="img-sharp w-full aspect-video object-cover rounded-lg">
+                        -->
                     </div>
                 </div>
 
@@ -404,32 +557,80 @@
                 </div>
             </div>
 
+            <!-- Section title for gallery -->
+            <div class="text-center mb-8 fade-in">
+                <h3 class="font-serif text-2xl font-bold text-primary mb-2">Certificate Gallery</h3>
+                <p class="text-sm text-gray-500">Click vào ảnh để xem full-size</p>
+            </div>
+
             <!-- Gallery Grid -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 fade-in">
-                <a href="https://i.postimg.cc/CxWfSXdn/Bang-MOS.jpg" target="_blank" class="block group overflow-hidden rounded-xl bg-gray-100 aspect-[4/3]">
-                    <img src="https://i.postimg.cc/CxWfSXdn/Bang-MOS.jpg" alt="MOS Certificate" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
-                        <span class="text-white text-sm font-medium">MOS Cert</span>
+                <!-- 📸 IMAGE 11 — MOS CERT -->
+                <a href="https://i.postimg.cc/CxWfSXdn/Bang-MOS.jpg" target="_blank" class="block group overflow-hidden rounded-xl bg-gray-100 aspect-[4/3] relative zoomable shadow-sm hover:shadow-xl transition-shadow">
+                    <img src="https://i.postimg.cc/CxWfSXdn/Bang-MOS.jpg"
+                         alt="MOS Certificate"
+                         loading="lazy"
+                         decoding="async"
+                         class="img-sharp w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 flex items-end justify-center pb-3 transition-opacity duration-300">
+                        <span class="text-white text-sm font-semibold flex items-center gap-1"><i class="fas fa-search-plus"></i> MOS Cert</span>
                     </div>
                 </a>
-                <a href="https://i.postimg.cc/XvdBJLyz/GCN-ICSEED-21th-1.png" target="_blank" class="block group overflow-hidden rounded-xl bg-gray-100 aspect-[4/3] relative">
-                    <img src="https://i.postimg.cc/XvdBJLyz/GCN-ICSEED-21th-1.png" alt="ICSEED Certificate" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
-                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
-                        <span class="text-white text-sm font-medium">ICSEED</span>
+                <!-- 📸 IMAGE 12 — ICSEED CERT -->
+                <a href="https://i.postimg.cc/XvdBJLyz/GCN-ICSEED-21th-1.png" target="_blank" class="block group overflow-hidden rounded-xl bg-gray-100 aspect-[4/3] relative zoomable shadow-sm hover:shadow-xl transition-shadow">
+                    <img src="https://i.postimg.cc/XvdBJLyz/GCN-ICSEED-21th-1.png"
+                         alt="ICSEED Certificate"
+                         loading="lazy"
+                         decoding="async"
+                         class="img-sharp w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 flex items-end justify-center pb-3 transition-opacity duration-300">
+                        <span class="text-white text-sm font-semibold flex items-center gap-1"><i class="fas fa-search-plus"></i> ICSEED</span>
                     </div>
                 </a>
-                <a href="https://i.postimg.cc/JhZHnxBF/EUREKA-1.png" target="_blank" class="block group overflow-hidden rounded-xl bg-gray-100 aspect-[4/3] relative">
-                    <img src="https://i.postimg.cc/JhZHnxBF/EUREKA-1.png" alt="Eureka Prize" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
-                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
-                        <span class="text-white text-sm font-medium">EUREKA</span>
+                <!-- 📸 IMAGE 13 — EUREKA CERT -->
+                <a href="https://i.postimg.cc/JhZHnxBF/EUREKA-1.png" target="_blank" class="block group overflow-hidden rounded-xl bg-gray-100 aspect-[4/3] relative zoomable shadow-sm hover:shadow-xl transition-shadow">
+                    <img src="https://i.postimg.cc/JhZHnxBF/EUREKA-1.png"
+                         alt="Eureka Prize"
+                         loading="lazy"
+                         decoding="async"
+                         class="img-sharp w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 flex items-end justify-center pb-3 transition-opacity duration-300">
+                        <span class="text-white text-sm font-semibold flex items-center gap-1"><i class="fas fa-search-plus"></i> EUREKA</span>
                     </div>
                 </a>
-                <a href="https://i.postimg.cc/3Rh4DGXx/Giai-B-BIT-REBRAND-1.png" target="_blank" class="block group overflow-hidden rounded-xl bg-gray-100 aspect-[4/3] relative">
-                    <img src="https://i.postimg.cc/3Rh4DGXx/Giai-B-BIT-REBRAND-1.png" alt="Genesis Research Award" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
-                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
-                        <span class="text-white text-sm font-medium">Genesis Award</span>
+                <!-- 📸 IMAGE 14 — GENESIS / BIT REBRAND CERT -->
+                <a href="https://i.postimg.cc/3Rh4DGXx/Giai-B-BIT-REBRAND-1.png" target="_blank" class="block group overflow-hidden rounded-xl bg-gray-100 aspect-[4/3] relative zoomable shadow-sm hover:shadow-xl transition-shadow">
+                    <img src="https://i.postimg.cc/3Rh4DGXx/Giai-B-BIT-REBRAND-1.png"
+                         alt="Genesis Research Award"
+                         loading="lazy"
+                         decoding="async"
+                         class="img-sharp w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 flex items-end justify-center pb-3 transition-opacity duration-300">
+                        <span class="text-white text-sm font-semibold flex items-center gap-1"><i class="fas fa-search-plus"></i> Genesis Award</span>
                     </div>
                 </a>
+
+                <!-- 📸 IMAGE 15 — THÊM ẢNH CHỨNG CHỈ MỚI (Eureka, UEH Young Researcher, ...) -->
+                <div class="block overflow-hidden rounded-xl aspect-[4/3] img-placeholder">
+                    <span>📸 ADD IMAGE HERE<br>(Cert mới)</span>
+                </div>
+                <!-- 📸 IMAGE 16 -->
+                <div class="block overflow-hidden rounded-xl aspect-[4/3] img-placeholder">
+                    <span>📸 ADD IMAGE HERE<br>(Cert mới)</span>
+                </div>
+                <!-- 📸 IMAGE 17 -->
+                <div class="block overflow-hidden rounded-xl aspect-[4/3] img-placeholder">
+                    <span>📸 ADD IMAGE HERE<br>(Ảnh hội thảo)</span>
+                </div>
+                <!-- 📸 IMAGE 18 -->
+                <div class="block overflow-hidden rounded-xl aspect-[4/3] img-placeholder">
+                    <span>📸 ADD IMAGE HERE<br>(Ảnh trao giải)</span>
+                </div>
+                <!-- Mẫu thay 1 placeholder bằng ảnh thật:
+                <a href="LINK_FULL_SIZE" target="_blank" class="block group overflow-hidden rounded-xl aspect-[4/3] relative zoomable shadow-sm hover:shadow-xl transition-shadow">
+                    <img src="LINK_ẢNH" alt="Mô tả" loading="lazy" decoding="async" class="img-sharp w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                </a>
+                -->
             </div>
         </div>
     </section>
@@ -444,34 +645,61 @@
 
             <div class="space-y-6">
                 <!-- Activity 1 -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-6 items-start md:items-center fade-in">
-                    <div class="w-12 h-12 rounded-full bg-blue-50 text-accent flex items-center justify-center flex-shrink-0 text-xl">
-                        <i class="fas fa-globe"></i>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-6 items-start fade-in hover-lift">
+                    <!-- 📸 IMAGE 19 — MUN ACTIVITY: ảnh hoạt động MUN -->
+                    <div class="w-full md:w-48 aspect-video md:aspect-square rounded-lg overflow-hidden flex-shrink-0 img-placeholder">
+                        <span>📸 ADD IMAGE HERE<br>(Ảnh MUN)</span>
+                        <!-- Thay placeholder bằng:
+                        <img src="LINK_ẢNH_MUN" alt="UEH MUN" loading="lazy" decoding="async" class="img-sharp w-full h-full object-cover">
+                        -->
                     </div>
-                    <div>
-                        <h4 class="text-lg font-bold text-primary">UEH Model United Nations (MUN) 2026</h4>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-50 to-blue-100 text-accent flex items-center justify-center flex-shrink-0 text-lg">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <h4 class="text-lg font-bold text-primary">UEH Model United Nations (MUN) 2026</h4>
+                        </div>
                         <p class="text-sm text-gray-600 mt-1">Active participant and candidate, engaging in high-level debate and international policy simulation.</p>
                     </div>
                 </div>
 
                 <!-- Activity 2 -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-6 items-start md:items-center fade-in">
-                    <div class="w-12 h-12 rounded-full bg-blue-50 text-accent flex items-center justify-center flex-shrink-0 text-xl">
-                        <i class="fas fa-hands-helping"></i>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-6 items-start fade-in hover-lift">
+                    <!-- 📸 IMAGE 20 — MENTORING: ảnh mentor / buổi cố vấn -->
+                    <div class="w-full md:w-48 aspect-video md:aspect-square rounded-lg overflow-hidden flex-shrink-0 img-placeholder">
+                        <span>📸 ADD IMAGE HERE<br>(Ảnh mentoring)</span>
+                        <!-- Thay placeholder bằng:
+                        <img src="LINK_ẢNH_MENTOR" alt="UEH Mentoring" loading="lazy" decoding="async" class="img-sharp w-full h-full object-cover">
+                        -->
                     </div>
-                    <div>
-                        <h4 class="text-lg font-bold text-primary">UEH Mentoring Program</h4>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-50 to-purple-100 text-purple-600 flex items-center justify-center flex-shrink-0 text-lg">
+                                <i class="fas fa-hands-helping"></i>
+                            </div>
+                            <h4 class="text-lg font-bold text-primary">UEH Mentoring Program</h4>
+                        </div>
                         <p class="text-sm text-gray-600 mt-1">Dedicated mentee under the guidance of Rafa Barreto, focusing on professional and personal development.</p>
                     </div>
                 </div>
 
                 <!-- Activity 3 -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-6 items-start md:items-center fade-in">
-                    <div class="w-12 h-12 rounded-full bg-blue-50 text-accent flex items-center justify-center flex-shrink-0 text-xl">
-                        <i class="fas fa-users-cog"></i>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-6 items-start fade-in hover-lift">
+                    <!-- 📸 IMAGE 21 — TEAM PROJECT: ảnh team Như, Giang, Dung, Nhân -->
+                    <div class="w-full md:w-48 aspect-video md:aspect-square rounded-lg overflow-hidden flex-shrink-0 img-placeholder">
+                        <span>📸 ADD IMAGE HERE<br>(Ảnh team Như/Giang/Dung/Nhân)</span>
+                        <!-- Thay placeholder bằng:
+                        <img src="LINK_ẢNH_TEAM" alt="Team project" loading="lazy" decoding="async" class="img-sharp w-full h-full object-cover">
+                        -->
                     </div>
-                    <div>
-                        <h4 class="text-lg font-bold text-primary">Project Leadership</h4>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0 text-lg">
+                                <i class="fas fa-users-cog"></i>
+                            </div>
+                            <h4 class="text-lg font-bold text-primary">Project Leadership</h4>
+                        </div>
                         <p class="text-sm text-gray-600 mt-1">Led a diverse group project team (Như, Giang, Dung, and Nhân), effectively managing financial and academic allocation to ensure project success.</p>
                     </div>
                 </div>
@@ -510,6 +738,12 @@
                     </div>
                 </div>
                 <div class="flex flex-col justify-center items-start md:items-end">
+                    <!-- 📸 IMAGE 22 — SIGNATURE / LOGO CÁ NHÂN: chữ ký scan hoặc logo cá nhân -->
+                    <div class="w-40 h-20 mb-6 rounded-lg img-placeholder text-xs">📸 ADD IMAGE HERE<br>(Chữ ký / Logo cá nhân)</div>
+                    <!-- Thay placeholder bằng:
+                    <img src="LINK_CHỮ_KÝ" alt="Louis signature" class="w-40 h-20 mb-6 object-contain invert opacity-90">
+                    -->
+
                     <p class="text-sm text-gray-400 mb-4 uppercase tracking-wider font-semibold">Connect on Socials</p>
                     <div class="flex gap-4">
                         <a href="#" class="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center text-xl hover:bg-accent hover:-translate-y-1 transition-all duration-300">
@@ -517,6 +751,9 @@
                         </a>
                         <a href="#" class="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center text-xl hover:bg-accent hover:-translate-y-1 transition-all duration-300">
                             <i class="fab fa-github"></i>
+                        </a>
+                        <a href="mailto:nktoan12112005@gmail.com" class="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center text-xl hover:bg-accent hover:-translate-y-1 transition-all duration-300">
+                            <i class="fas fa-envelope"></i>
                         </a>
                     </div>
                 </div>
@@ -527,6 +764,14 @@
             </div>
         </div>
     </footer>
+
+    <!-- Lightbox overlay -->
+    <div id="lightbox" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 cursor-zoom-out">
+        <img id="lightbox-img" src="" alt="" class="max-w-[95vw] max-h-[95vh] object-contain rounded-lg shadow-2xl">
+        <button id="lightbox-close" class="absolute top-4 right-4 w-12 h-12 rounded-full bg-white/10 text-white hover:bg-white/20 flex items-center justify-center text-2xl">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
 
     <!-- Scripts -->
     <script>
@@ -563,6 +808,51 @@
 
         document.querySelectorAll('.fade-in').forEach(element => {
             observer.observe(element);
+        });
+
+        // Lightbox — click vào ảnh chứng chỉ để phóng to full-size
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxClose = document.getElementById('lightbox-close');
+
+        document.querySelectorAll('.zoomable').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const url = link.getAttribute('href') || link.querySelector('img')?.src;
+                if (url) {
+                    lightboxImg.src = url;
+                    lightbox.classList.remove('hidden');
+                    lightbox.classList.add('flex');
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+        });
+
+        const closeLightbox = () => {
+            lightbox.classList.add('hidden');
+            lightbox.classList.remove('flex');
+            lightboxImg.src = '';
+            document.body.style.overflow = '';
+        };
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox || e.target === lightboxClose || lightboxClose.contains(e.target)) {
+                closeLightbox();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+
+        // Navbar shadow on scroll
+        const nav = document.querySelector('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                nav.classList.add('shadow-md');
+            } else {
+                nav.classList.remove('shadow-md');
+            }
         });
     </script>
 </body>
